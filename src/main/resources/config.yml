@@ -1,0 +1,91 @@
+candy-drop:
+  enabled: true
+  drop-chance: 15.0
+  drop-from-hostile: true
+  drop-from-passive: true
+  drop-from-boss: true
+
+trick-or-treat:
+  trick-chance: 50.0
+
+treats:
+  speedy-treat:
+    enabled: true
+    speed-level: 2
+    duration: 30
+  high-jumps:
+    enabled: true
+    jump-level: 2
+    duration: 30
+  candy-cash:
+    enabled: true
+    min-amount: 50.0
+    max-amount: 200.0
+  xp-rush:
+    enabled: true
+    min-xp: 50
+    max-xp: 100
+  nourishing-nibble:
+    enabled: true
+    hunger-restored: 4
+    saturation-restored: 8.0
+  spectral-sight:
+    enabled: true
+    radius: 20
+    duration: 20
+  midas-touch:
+    enabled: true
+    min-items: 1
+    max-items: 3
+    possible-items:
+      - IRON_INGOT
+      - GOLD_NUGGET
+      - GOLD_INGOT
+      - DIAMOND
+      - EMERALD
+  instant-repair:
+    enabled: true
+    min-percent: 5
+    max-percent: 10
+  health-surge:
+    enabled: true
+    absorption-level: 2
+    duration: 45
+
+tricks:
+  temporary-blindness:
+    enabled: true
+    duration: 10
+  unlucky-strike:
+    enabled: true
+  wobbly-legs:
+    enabled: true
+    duration: 15
+  slowness-curse:
+    enabled: true
+    slowness-level: 4
+    duration: 10
+  random-teleport:
+    enabled: true
+    min-distance: 5
+    max-distance: 10
+  fake-scare:
+    enabled: true
+    sound: ENTITY_PHANTOM_AMBIENT
+  gravity-shift:
+    enabled: true
+    levitation-duration: 2
+  inventory-jumble:
+    enabled: true
+  cobweb-curse:
+    enabled: true
+    cobweb-duration: 5
+
+messages:
+  prefix: "&6[&c🎃&6] &r"
+  candy-received: "&aYou found Halloween Candy! Right-click to use it!"
+  treat-received: "&a&lTREAT! &r&a{treat}"
+  trick-received: "&c&lTRICK! &r&c{trick}"
+  no-permission: "&cYou don't have permission to use this command!"
+  config-reloaded: "&aConfiguration reloaded successfully!"
+  candy-given: "&aGave {amount} Halloween Candy to {player}!"
