@@ -131,38 +131,44 @@ public class TreatHandler {
     }
     
     private void applyInstantRepair(Player player) {
-        ItemStack heldItem = player.getInventory().getItemInMainHand();
-        
-        if (heldItem == null || heldItem.getType() == Material.AIR) {
-            player.sendMessage("§c⚠ You need to hold an item to repair!");
-            return;
-        }
-        
-        ItemMeta meta = heldItem.getItemMeta();
-        if (meta == null || !(meta instanceof org.bukkit.inventory.meta.Damageable)) {
-            player.sendMessage("§c⚠ This item cannot be repaired!");
-            return;
-        }
-        
-        org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) meta;
-        
-        if (!damageable.hasDamage() || damageable.getDamage() == 0) {
-            player.sendMessage("§c⚠ This item doesn't need repairs!");
-            return;
-        }
-        
         int minPercent = config.getInt("treats.instant-repair.min-percent", 5);
         int maxPercent = config.getInt("treats.instant-repair.max-percent", 10);
         int percent = minPercent + random.nextInt(maxPercent - minPercent + 1);
         
-        int maxDurability = heldItem.getType().getMaxDurability();
-        int repairAmount = (int) (maxDurability * (percent / 100.0));
-        int newDamage = Math.max(0, damageable.getDamage() - repairAmount);
+        int repairedCount = 0;
         
-        damageable.setDamage(newDamage);
-        heldItem.setItemMeta(meta);
+        for (int slot = 0; slot < 9; slot++) {
+            ItemStack item = player.getInventory().getItem(slot);
+            
+            if (item == null || item.getType() == Material.AIR) {
+                continue;
+            }
+            
+            ItemMeta meta = item.getItemMeta();
+            if (meta == null || !(meta instanceof org.bukkit.inventory.meta.Damageable)) {
+                continue;
+            }
+            
+            org.bukkit.inventory.meta.Damageable damageable = (org.bukkit.inventory.meta.Damageable) meta;
+            
+            if (!damageable.hasDamage() || damageable.getDamage() == 0) {
+                continue;
+            }
+            
+            int maxDurability = item.getType().getMaxDurability();
+            int repairAmount = (int) (maxDurability * (percent / 100.0));
+            int newDamage = Math.max(0, damageable.getDamage() - repairAmount);
+            
+            damageable.setDamage(newDamage);
+            item.setItemMeta(meta);
+            repairedCount++;
+        }
         
-        player.sendMessage("§a🔧 Your item was repaired by " + percent + "%!");
+        if (repairedCount == 0) {
+            player.sendMessage("§c⚠ No items in your hotbar need repairs!");
+        } else {
+            player.sendMessage("§a🔧 Repaired " + repairedCount + " item(s) in your hotbar by " + percent + "%!");
+        }
     }
     
     private void applyHealthSurge(Player player) {
