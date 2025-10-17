@@ -6,6 +6,8 @@ import com.halloween.trickortreat.listeners.CandyUseListener;
 import com.halloween.trickortreat.managers.CandyManager;
 import com.halloween.trickortreat.managers.ConfigManager;
 import com.halloween.trickortreat.managers.EconomyManager;
+import com.halloween.trickortreat.managers.RareCandyManager;
+import com.halloween.trickortreat.managers.RareTrickOrTreatManager;
 import com.halloween.trickortreat.managers.TrickOrTreatManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -14,7 +16,9 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     private static TrickOrTreatPlugin instance;
     private ConfigManager configManager;
     private CandyManager candyManager;
+    private RareCandyManager rareCandyManager;
     private TrickOrTreatManager trickOrTreatManager;
+    private RareTrickOrTreatManager rareTrickOrTreatManager;
     private EconomyManager economyManager;
     
     @Override
@@ -25,8 +29,10 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         
         this.configManager = new ConfigManager(this);
         this.candyManager = new CandyManager(this);
+        this.rareCandyManager = new RareCandyManager(this);
         this.economyManager = new EconomyManager(this);
         this.trickOrTreatManager = new TrickOrTreatManager(this);
+        this.rareTrickOrTreatManager = new RareTrickOrTreatManager(this);
         
         getServer().getPluginManager().registerEvents(new CandyDropListener(this), this);
         getServer().getPluginManager().registerEvents(new CandyUseListener(this), this);
@@ -61,6 +67,14 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     
     public EconomyManager getEconomyManager() {
         return economyManager;
+    }
+    
+    public RareCandyManager getRareCandyManager() {
+        return rareCandyManager;
+    }
+    
+    public RareTrickOrTreatManager getRareTrickOrTreatManager() {
+        return rareTrickOrTreatManager;
     }
     
     public void reloadPluginConfig() {

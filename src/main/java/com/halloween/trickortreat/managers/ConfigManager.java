@@ -1,8 +1,11 @@
 package com.halloween.trickortreat.managers;
 
 import com.halloween.trickortreat.TrickOrTreatPlugin;
+import com.halloween.trickortreat.utils.ItemSerializer;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.inventory.ItemStack;
 
 public class ConfigManager {
     
@@ -71,5 +74,40 @@ public class ConfigManager {
     
     public FileConfiguration getConfig() {
         return config;
+    }
+    
+    public ItemStack getCustomRareTreatItem(String itemKey) {
+        ConfigurationSection section = config.getConfigurationSection("rare-treats.items." + itemKey);
+        return ItemSerializer.loadItemFromConfig(section);
+    }
+    
+    public void setCustomRareTreatItem(String itemKey, ItemStack item) {
+        ConfigurationSection section = config.createSection("rare-treats.items." + itemKey);
+        ItemSerializer.saveItemToConfig(section, item);
+        plugin.saveConfig();
+    }
+    
+    public boolean isRareTreatEnabled(String itemKey) {
+        return config.getBoolean("rare-treats.items." + itemKey + ".enabled", true);
+    }
+    
+    public boolean isRareTrickEnabled(String trickKey) {
+        return config.getBoolean("rare-tricks.enabled." + trickKey, true);
+    }
+    
+    public double getRareTreatChance() {
+        return config.getDouble("rare-treats.treat-chance", 50.0);
+    }
+    
+    public double getRareTrickChance() {
+        return config.getDouble("rare-tricks.trick-chance", 50.0);
+    }
+    
+    public int getRareTreatWeight(String treatKey) {
+        return config.getInt("rare-treats.individual-chances." + treatKey, 10);
+    }
+    
+    public int getRareTrickWeight(String trickKey) {
+        return config.getInt("rare-tricks.individual-chances." + trickKey, 20);
     }
 }

@@ -81,11 +81,75 @@ tricks:
     enabled: true
     cobweb-duration: 5
 
+rare-treats:
+  treat-chance: 50.0
+  individual-chances:
+    token: 10
+    collectpass: 10
+    fruitkey: 20
+    spookey: 20
+    netherite: 10
+    wspawn: 5
+    sspawn: 15
+  items:
+    token:
+      enabled: true
+      material: 
+      name: ""
+      lore:
+        - ""
+    collectpass:
+      enabled: true
+      material: 
+      name: ""
+      lore:
+        - ""
+    fruitkey:
+      enabled: true
+      material:   
+      name: ""
+      lore:
+        - ""
+    spookey:
+      enabled: true
+      material: 
+      name: ""
+      lore:
+        - ""
+    wspawn:
+      enabled: true
+      material: 
+      name: ""
+      lore:
+        - ""
+    sspawn:
+      enabled: true
+      material: 
+      name: ""
+      lore:
+        - ""
+
+rare-tricks:
+  trick-chance: 50.0
+  individual-chances:
+    fake-creeper-blast: 20
+    fake-wither: 20
+    multi-potion-effect: 20
+    upgraded-cobweb: 20
+  enabled:
+    fake-creeper-blast: true
+    fake-wither: true
+    multi-potion-effect: true
+    upgraded-cobweb: true
+
 messages:
   prefix: "&6[&c🎃&6] &r"
   candy-received: "&aYou found Halloween Candy! Right-click to use it!"
+  rare-candy-received: "&d&lRARE! &r&bYou found Rare Halloween Candy! Right-click to use it!"
   treat-received: "&a&lTREAT! &r&a{treat}"
   trick-received: "&c&lTRICK! &r&c{trick}"
+  rare-treat-received: "&d&lRARE TREAT! &r&d{treat}"
+  rare-trick-received: "&5&lRARE TRICK! &r&5{trick}"
   no-permission: "&cYou don't have permission to use this command!"
   config-reloaded: "&aConfiguration reloaded successfully!"
   candy-given: "&aGave {amount} Halloween Candy to {player}!"

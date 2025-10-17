@@ -27,7 +27,10 @@ public class CandyUseListener implements Listener {
         Player player = event.getPlayer();
         ItemStack item = event.getItem();
         
-        if (item == null || !plugin.getCandyManager().isCandyItem(item)) {
+        boolean isRegularCandy = plugin.getCandyManager().isCandyItem(item);
+        boolean isRareCandy = plugin.getRareCandyManager().isRareCandyItem(item);
+        
+        if (item == null || (!isRegularCandy && !isRareCandy)) {
             return;
         }
         
@@ -42,6 +45,10 @@ public class CandyUseListener implements Listener {
         
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
         
-        plugin.getTrickOrTreatManager().activateTrickOrTreat(player);
+        if (isRareCandy) {
+            plugin.getRareTrickOrTreatManager().activateRareTrickOrTreat(player);
+        } else {
+            plugin.getTrickOrTreatManager().activateTrickOrTreat(player);
+        }
     }
 }

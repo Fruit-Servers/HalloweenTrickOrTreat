@@ -40,10 +40,20 @@ public class CandyDropListener implements Listener {
         double roll = random.nextDouble() * 100.0;
         
         if (roll <= dropChance) {
-            ItemStack candy = plugin.getCandyManager().createCandyItem();
-            entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
+            double rareRoll = random.nextDouble() * 100.0;
             
-            killer.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
+            if (rareRoll <= 1.0 && plugin.getRareCandyManager().canReceiveRareCandy(killer)) {
+                ItemStack rareCandy = plugin.getRareCandyManager().createRareCandyItem();
+                entity.getWorld().dropItemNaturally(entity.getLocation(), rareCandy);
+                plugin.getRareCandyManager().recordRareCandyDrop(killer);
+                
+                killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
+            } else {
+                ItemStack candy = plugin.getCandyManager().createCandyItem();
+                entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
+                
+                killer.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
+            }
         }
     }
     
