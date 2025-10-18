@@ -48,6 +48,9 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
             case "set":
                 handleSet(sender, args);
                 break;
+            case "cooldown":
+                handleCooldown(sender, args);
+                break;
             case "help":
                 sendHelp(sender);
                 break;
@@ -177,12 +180,75 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage(ChatColor.GREEN + "Successfully set " + itemKey + " reward to: " + itemName);
     }
     
+    private void handleCooldown(CommandSender sender, String[] args) {
+        if (!sender.hasPermission("trickortreat.admin")) {
+            sender.sendMessage(plugin.getConfigManager().getMessage("no-permission"));
+            return;
+        }
+        
+        if (args.length < 2) {
+            sender.sendMessage(ChatColor.RED + "Usage: /trickortreat cooldown <check|clear> [player]");
+            return;
+        }
+        
+        String action = args[1].toLowerCase();
+        
+        switch (action) {
+            case "check":
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /trickortreat cooldown check <player>");
+                    return;
+                }
+                
+                Player target = Bukkit.getPlayer(args[2]);
+                if (target == null) {
+                    sender.sendMessage(ChatColor.RED + "Player not found: " + args[2]);
+                    return;
+                }
+                
+                if (plugin.getCooldownManager().isOnRareCandyCooldown(target)) {
+                    long remaining = plugin.getCooldownManager().getRareCandyCooldownRemaining(target);
+                    String timeLeft = plugin.getCooldownManager().formatCooldownTime(remaining);
+                    sender.sendMessage(ChatColor.YELLOW + target.getName() + " has " + timeLeft + " remaining on rare candy cooldown.");
+                } else {
+                    sender.sendMessage(ChatColor.GREEN + target.getName() + " is not on rare candy cooldown.");
+                }
+                break;
+                
+            case "clear":
+                if (args.length < 3) {
+                    sender.sendMessage(ChatColor.RED + "Usage: /trickortreat cooldown clear <player|all>");
+                    return;
+                }
+                
+                if (args[2].equalsIgnoreCase("all")) {
+                    plugin.getCooldownManager().clearAllCooldowns();
+                    sender.sendMessage(ChatColor.GREEN + "Cleared all rare candy cooldowns!");
+                } else {
+                    Player targetPlayer = Bukkit.getPlayer(args[2]);
+                    if (targetPlayer == null) {
+                        sender.sendMessage(ChatColor.RED + "Player not found: " + args[2]);
+                        return;
+                    }
+                    
+                    plugin.getCooldownManager().clearCooldown(targetPlayer);
+                    sender.sendMessage(ChatColor.GREEN + "Cleared rare candy cooldown for " + targetPlayer.getName() + "!");
+                }
+                break;
+                
+            default:
+                sender.sendMessage(ChatColor.RED + "Usage: /trickortreat cooldown <check|clear> [player]");
+                break;
+        }
+    }
+    
     private void sendHelp(CommandSender sender) {
         sender.sendMessage(ChatColor.GOLD + "=== Halloween Trick or Treat ===");
         sender.sendMessage(ChatColor.YELLOW + "/trickortreat reload " + ChatColor.GRAY + "- Reload the configuration");
         sender.sendMessage(ChatColor.YELLOW + "/trickortreat give <player> [amount] " + ChatColor.GRAY + "- Give candy to a player");
         sender.sendMessage(ChatColor.YELLOW + "/trickortreat giverare <player> [amount] " + ChatColor.GRAY + "- Give rare candy to a player");
         sender.sendMessage(ChatColor.YELLOW + "/trickortreat set item <type> " + ChatColor.GRAY + "- Set custom item for rare treat reward");
+        sender.sendMessage(ChatColor.YELLOW + "/trickortreat cooldown <check|clear> [player] " + ChatColor.GRAY + "- Manage rare candy cooldowns");
         sender.sendMessage(ChatColor.YELLOW + "/trickortreat help " + ChatColor.GRAY + "- Show this help message");
     }
     
@@ -191,15 +257,24 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         List<String> completions = new ArrayList<>();
         
         if (args.length == 1) {
-            completions.addAll(Arrays.asList("reload", "give", "giverare", "set", "help"));
+            completions.addAll(Arrays.asList("reload", "give", "giverare", "set", "cooldown", "help"));
         } else if (args.length == 2 && (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("giverare"))) {
             for (Player player : Bukkit.getOnlinePlayers()) {
                 completions.add(player.getName());
             }
         } else if (args.length == 2 && args[0].equalsIgnoreCase("set")) {
             completions.add("item");
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("cooldown")) {
+            completions.addAll(Arrays.asList("check", "clear"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("item")) {
             completions.addAll(Arrays.asList("token", "collectpass", "fruitkey", "spookey", "wspawn", "sspawn"));
+        } else if (args.length == 3 && args[0].equalsIgnoreCase("cooldown")) {
+            if (args[1].equalsIgnoreCase("clear")) {
+                completions.add("all");
+            }
+            for (Player player : Bukkit.getOnlinePlayers()) {
+                completions.add(player.getName());
+            }
         } else if (args.length == 3 && (args[0].equalsIgnoreCase("give") || args[0].equalsIgnoreCase("giverare"))) {
             completions.addAll(Arrays.asList("1", "5", "10", "16", "32", "64"));
         }

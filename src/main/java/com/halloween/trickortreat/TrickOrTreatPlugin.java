@@ -5,6 +5,7 @@ import com.halloween.trickortreat.listeners.CandyDropListener;
 import com.halloween.trickortreat.listeners.CandyUseListener;
 import com.halloween.trickortreat.managers.CandyManager;
 import com.halloween.trickortreat.managers.ConfigManager;
+import com.halloween.trickortreat.managers.CooldownManager;
 import com.halloween.trickortreat.managers.EconomyManager;
 import com.halloween.trickortreat.managers.RareCandyManager;
 import com.halloween.trickortreat.managers.RareTrickOrTreatManager;
@@ -20,6 +21,7 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     private TrickOrTreatManager trickOrTreatManager;
     private RareTrickOrTreatManager rareTrickOrTreatManager;
     private EconomyManager economyManager;
+    private CooldownManager cooldownManager;
     
     @Override
     public void onEnable() {
@@ -31,6 +33,7 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         this.candyManager = new CandyManager(this);
         this.rareCandyManager = new RareCandyManager(this);
         this.economyManager = new EconomyManager(this);
+        this.cooldownManager = new CooldownManager(this);
         this.trickOrTreatManager = new TrickOrTreatManager(this);
         this.rareTrickOrTreatManager = new RareTrickOrTreatManager(this);
         
@@ -75,6 +78,10 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     
     public RareTrickOrTreatManager getRareTrickOrTreatManager() {
         return rareTrickOrTreatManager;
+    }
+    
+    public CooldownManager getCooldownManager() {
+        return cooldownManager;
     }
     
     public void reloadPluginConfig() {
