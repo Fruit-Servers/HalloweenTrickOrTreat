@@ -1,0 +1,150 @@
+package com.halloween.trickortreat.listeners;
+
+import com.halloween.trickortreat.TrickOrTreatPlugin;
+import com.pixelmonmod.pixelmon.api.events.BeatWildPixelmonEvent;
+import com.pixelmonmod.pixelmon.api.events.CaptureEvent;
+import com.pixelmonmod.pixelmon.api.events.battles.BattleEndEvent;
+import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
+import com.pixelmonmod.pixelmon.battles.controller.participants.BattleParticipant;
+import com.pixelmonmod.pixelmon.battles.controller.participants.PlayerParticipant;
+import com.pixelmonmod.pixelmon.battles.controller.participants.WildPixelmonParticipant;
+import com.pixelmonmod.pixelmon.entities.pixelmon.PixelmonEntity;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.bukkit.Location;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.Random;
+
+public class PixelmonDeathListener {
+    
+    private final TrickOrTreatPlugin plugin;
+    private final Random random;
+    
+    public PixelmonDeathListener(TrickOrTreatPlugin plugin) {
+        this.plugin = plugin;
+        this.random = new Random();
+    }
+    
+    @SubscribeEvent
+    public void onBeatWildPokemon(BeatWildPixelmonEvent event) {
+        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
+            return;
+        }
+        
+        Player player = event.player.getBukkitEntity();
+        Pokemon pokemon = event.wpp.allPokemon[0];
+        
+        if (shouldDropCandyFromPokemon(pokemon)) {
+            handleCandyDrop(player, event.wpp.getEntity().getBukkitEntity().getLocation());
+        }
+    }
+    
+    @SubscribeEvent
+    public void onBattleEnd(BattleEndEvent event) {
+        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
+            return;
+        }
+        
+        for (BattleParticipant participant : event.getBattleController().participants) {
+            if (participant instanceof PlayerParticipant) {
+                PlayerParticipant playerParticipant = (PlayerParticipant) participant;
+                Player player = playerParticipant.player.getBukkitEntity();
+                
+                // Check if any wild Pokemon were defeated
+                for (BattleParticipant opponent : event.getBattleController().participants) {
+                    if (opponent instanceof WildPixelmonParticipant) {
+                        WildPixelmonParticipant wildParticipant = (WildPixelmonParticipant) opponent;
+                        
+                        // Check if all Pokemon in the wild participant's team have fainted
+                        boolean allFainted = true;
+                        for (PixelmonEntity pixelmon : wildParticipant.allPokemon) {
+                            if (pixelmon != null && !pixelmon.getPokemon().isFainted()) {
+                                allFainted = false;
+                                break;
+                            }
+                        }
+                        
+                        if (allFainted && wildParticipant.allPokemon.length > 0) {
+                            PixelmonEntity defeatedPokemon = wildParticipant.allPokemon[0];
+                            if (defeatedPokemon != null && shouldDropCandyFromPokemon(defeatedPokemon.getPokemon())) {
+                                handleCandyDrop(player, defeatedPokemon.getBukkitEntity().getLocation());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+    
+    @SubscribeEvent
+    public void onPokemonCapture(CaptureEvent.SuccessfulCapture event) {
+        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
+            return;
+        }
+        
+        if (!plugin.getConfigManager().canDropFromCapture()) {
+            return;
+        }
+        
+        Player player = event.getPlayer().getBukkitEntity();
+        Pokemon pokemon = event.getPokemon().getPokemon();
+        
+        if (shouldDropCandyFromPokemon(pokemon)) {
+            handleCandyDrop(player, event.getPokemon().getBukkitEntity().getLocation());
+        }
+    }
+    
+    private boolean shouldDropCandyFromPokemon(Pokemon pokemon) {
+        if (pokemon == null) {
+            return false;
+        }
+        
+        // Check if legendary/ultra beast drops are enabled
+        if (pokemon.isLegendary() && !plugin.getConfigManager().canDropFromLegendary()) {
+            return false;
+        }
+        
+        if (pokemon.isUltraBeast() && !plugin.getConfigManager().canDropFromUltraBeast()) {
+            return false;
+        }
+        
+        // Check if shiny Pokemon have increased drop rates
+        if (pokemon.isShiny() && plugin.getConfigManager().hasShinyBonus()) {
+            return random.nextDouble() * 100.0 <= plugin.getConfigManager().getShinyDropChance();
+        }
+        
+        return true;
+    }
+    
+    private void handleCandyDrop(Player player, Location location) {
+        double dropChance = plugin.getConfigManager().getPixelmonDropChance();
+        double roll = random.nextDouble() * 100.0;
+        
+        if (roll <= dropChance) {
+            double rareRoll = random.nextDouble() * 100.0;
+            
+            if (rareRoll <= plugin.getConfigManager().getPixelmonRareChance() && 
+                plugin.getRareCandyManager().canReceiveRareCandy(player)) {
+                
+                if (plugin.getCooldownManager().isOnRareCandyCooldown(player)) {
+                    long remaining = plugin.getCooldownManager().getRareCandyCooldownRemaining(player);
+                    String timeLeft = plugin.getCooldownManager().formatCooldownTime(remaining);
+                    player.sendMessage("§c⏰ You must wait " + timeLeft + " before receiving another rare candy!");
+                } else {
+                    ItemStack rareCandy = plugin.getRareCandyManager().createRareCandyItem();
+                    location.getWorld().dropItemNaturally(location, rareCandy);
+                    plugin.getRareCandyManager().recordRareCandyDrop(player);
+                    plugin.getCooldownManager().setRareCandyCooldown(player);
+                    
+                    player.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
+                }
+            } else {
+                ItemStack candy = plugin.getCandyManager().createCandyItem();
+                location.getWorld().dropItemNaturally(location, candy);
+                
+                player.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
+            }
+        }
+    }
+}

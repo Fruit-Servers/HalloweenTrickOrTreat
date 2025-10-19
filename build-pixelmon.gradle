@@ -1,0 +1,51 @@
+plugins {
+    id 'java'
+}
+
+group = 'com.halloween'
+version = '1.1.1-pixelmon'
+description = 'A Halloween-themed trick or treat plugin for Minecraft with Pixelmon support'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_1_8
+    targetCompatibility = JavaVersion.VERSION_1_8
+}
+
+repositories {
+    mavenCentral()
+    maven {
+        name = 'spigotmc-repo'
+        url = 'https://hub.spigotmc.org/nexus/content/repositories/snapshots/'
+    }
+    maven {
+        name = 'sonatype'
+        url = 'https://oss.sonatype.org/content/groups/public/'
+    }
+    maven {
+        name = 'jitpack'
+        url = 'https://jitpack.io'
+    }
+    maven {
+        name = 'pixelmon'
+        url = 'https://maven.pixelmonmod.com/repository/maven-releases/'
+    }
+}
+
+dependencies {
+    compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
+    compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
+    compileOnly 'com.pixelmonmod.pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching('plugin.yml') {
+        expand props
+    }
+}
+
+jar {
+    archiveFileName = "TrickOrTreat-${version}.jar"
+}

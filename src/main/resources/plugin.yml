@@ -1,10 +1,10 @@
-name: HalloweenTrickOrTreat
-version: '${version}'
+name: TrickOrTreat
+version: ${version}
 main: com.halloween.trickortreat.TrickOrTreatPlugin
-api-version: '1.20'
-author: Halloween Team
-description: A festive Halloween trick or treat plugin
-softdepend: [Vault]
+api-version: 1.16
+authors: [YourName]
+description: A Halloween-themed trick or treat plugin with Pixelmon support
+softdepend: [Vault, LuckPerms, Pixelmon]
 
 commands:
   trickortreat:

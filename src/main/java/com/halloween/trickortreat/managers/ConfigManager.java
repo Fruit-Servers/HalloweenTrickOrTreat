@@ -110,4 +110,37 @@ public class ConfigManager {
     public int getRareTrickWeight(String trickKey) {
         return config.getInt("rare-tricks.individual-chances." + trickKey, 20);
     }
+    
+    // Pixelmon-specific configuration methods
+    public boolean isPixelmonDropEnabled() {
+        return config.getBoolean("pixelmon-drops.enabled", true);
+    }
+    
+    public double getPixelmonDropChance() {
+        return config.getDouble("pixelmon-drops.drop-chance", 15.0);
+    }
+    
+    public double getPixelmonRareChance() {
+        return config.getDouble("pixelmon-drops.rare-chance", 2.0);
+    }
+    
+    public boolean canDropFromCapture() {
+        return config.getBoolean("pixelmon-drops.from-capture", true);
+    }
+    
+    public boolean canDropFromLegendary() {
+        return config.getBoolean("pixelmon-drops.from-legendary", true);
+    }
+    
+    public boolean canDropFromUltraBeast() {
+        return config.getBoolean("pixelmon-drops.from-ultra-beast", true);
+    }
+    
+    public boolean hasShinyBonus() {
+        return config.getBoolean("pixelmon-drops.shiny-bonus", true);
+    }
+    
+    public double getShinyDropChance() {
+        return config.getDouble("pixelmon-drops.shiny-drop-chance", 30.0);
+    }
 }

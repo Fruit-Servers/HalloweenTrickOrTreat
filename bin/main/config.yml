@@ -1,9 +1,19 @@
-candy-drop:
+candy-drops:
+  enabled: true
+  drop-chance: 10.0
+  from-hostile: true
+  from-passive: false
+  from-boss: true
+
+pixelmon-drops:
   enabled: true
   drop-chance: 15.0
-  drop-from-hostile: true
-  drop-from-passive: true
-  drop-from-boss: true
+  rare-chance: 2.0
+  from-capture: true
+  from-legendary: true
+  from-ultra-beast: true
+  shiny-bonus: true
+  shiny-drop-chance: 30.0
 
 trick-or-treat:
   trick-chance: 50.0
