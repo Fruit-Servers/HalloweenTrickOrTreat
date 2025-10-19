@@ -40,16 +40,8 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CandyDropListener(this), this);
         getServer().getPluginManager().registerEvents(new CandyUseListener(this), this);
         
-        // Register Pixelmon listener if Pixelmon is present
-        if (getServer().getPluginManager().getPlugin("Pixelmon") != null) {
-            try {
-                Class.forName("com.pixelmonmod.pixelmon.Pixelmon");
-                registerPixelmonListener();
-                getLogger().info("🎃 Pixelmon support enabled!");
-            } catch (ClassNotFoundException e) {
-                getLogger().warning("Pixelmon plugin found but Pixelmon classes not available");
-            }
-        }
+        // Note: Pixelmon integration requires a separate Forge bridge mod
+        // See PIXELMON_BRIDGE_SOLUTION.md for proper implementation
         
         TrickOrTreatCommand commandHandler = new TrickOrTreatCommand(this);
         getCommand("trickortreat").setExecutor(commandHandler);
@@ -101,23 +93,4 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         getLogger().info("Configuration reloaded!");
     }
     
-    private void registerPixelmonListener() {
-        try {
-            // Use reflection to register Pixelmon listener to avoid compile-time dependency
-            Class<?> pixelmonClass = Class.forName("com.pixelmonmod.pixelmon.Pixelmon");
-            Object pixelmonInstance = pixelmonClass.getField("instance").get(null);
-            
-            Class<?> eventBusClass = Class.forName("net.minecraftforge.common.MinecraftForge");
-            Object eventBus = eventBusClass.getField("EVENT_BUS").get(null);
-            
-            // Create and register our listener using reflection
-            Class<?> listenerClass = Class.forName("com.halloween.trickortreat.listeners.PixelmonDeathListener");
-            Object listener = listenerClass.getConstructor(TrickOrTreatPlugin.class).newInstance(this);
-            eventBus.getClass().getMethod("register", Object.class).invoke(eventBus, listener);
-            
-            getLogger().info("Successfully registered Pixelmon event listener!");
-        } catch (Exception e) {
-            getLogger().warning("Failed to register Pixelmon listener: " + e.getMessage());
-        }
-    }
 }
