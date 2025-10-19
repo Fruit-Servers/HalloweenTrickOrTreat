@@ -1,21 +1,17 @@
 package com.halloween.trickortreat.listeners;
 
 import com.halloween.trickortreat.TrickOrTreatPlugin;
-import com.pixelmonmod.pixelmon.api.events.BeatWildPixelmonEvent;
-import com.pixelmonmod.pixelmon.api.events.CaptureEvent;
-import com.pixelmonmod.pixelmon.api.events.battles.BattleEndEvent;
-import com.pixelmonmod.pixelmon.api.pokemon.Pokemon;
-import com.pixelmonmod.pixelmon.battles.controller.participants.BattleParticipant;
-import com.pixelmonmod.pixelmon.battles.controller.participants.PlayerParticipant;
-import com.pixelmonmod.pixelmon.battles.controller.participants.WildPixelmonParticipant;
-import com.pixelmonmod.pixelmon.entities.pixelmon.PixelmonEntity;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Method;
 import java.util.Random;
 
+/**
+ * Pixelmon Death Listener - Uses reflection to avoid compile-time dependencies
+ * This listener handles Pokemon defeat and capture events for candy drops
+ */
 public class PixelmonDeathListener {
     
     private final TrickOrTreatPlugin plugin;
@@ -26,95 +22,105 @@ public class PixelmonDeathListener {
         this.random = new Random();
     }
     
-    @SubscribeEvent
-    public void onBeatWildPokemon(BeatWildPixelmonEvent event) {
-        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
-            return;
-        }
-        
-        Player player = event.player.getBukkitEntity();
-        Pokemon pokemon = event.wpp.allPokemon[0];
-        
-        if (shouldDropCandyFromPokemon(pokemon)) {
-            handleCandyDrop(player, event.wpp.getEntity().getBukkitEntity().getLocation());
-        }
-    }
-    
-    @SubscribeEvent
-    public void onBattleEnd(BattleEndEvent event) {
-        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
-            return;
-        }
-        
-        for (BattleParticipant participant : event.getBattleController().participants) {
-            if (participant instanceof PlayerParticipant) {
-                PlayerParticipant playerParticipant = (PlayerParticipant) participant;
-                Player player = playerParticipant.player.getBukkitEntity();
+    // This method will be called via reflection when BeatWildPixelmonEvent occurs
+    public void onBeatWildPokemon(Object event) {
+        try {
+            if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
+                return;
+            }
+            
+            // Use reflection to get player and pokemon from event
+            Object playerObj = event.getClass().getField("player").get(event);
+            Player player = (Player) playerObj.getClass().getMethod("getBukkitEntity").invoke(playerObj);
+            
+            Object wppObj = event.getClass().getField("wpp").get(event);
+            Object[] allPokemon = (Object[]) wppObj.getClass().getField("allPokemon").get(wppObj);
+            
+            if (allPokemon.length > 0 && allPokemon[0] != null) {
+                Object pokemon = allPokemon[0];
                 
-                // Check if any wild Pokemon were defeated
-                for (BattleParticipant opponent : event.getBattleController().participants) {
-                    if (opponent instanceof WildPixelmonParticipant) {
-                        WildPixelmonParticipant wildParticipant = (WildPixelmonParticipant) opponent;
-                        
-                        // Check if all Pokemon in the wild participant's team have fainted
-                        boolean allFainted = true;
-                        for (PixelmonEntity pixelmon : wildParticipant.allPokemon) {
-                            if (pixelmon != null && !pixelmon.getPokemon().isFainted()) {
-                                allFainted = false;
-                                break;
-                            }
-                        }
-                        
-                        if (allFainted && wildParticipant.allPokemon.length > 0) {
-                            PixelmonEntity defeatedPokemon = wildParticipant.allPokemon[0];
-                            if (defeatedPokemon != null && shouldDropCandyFromPokemon(defeatedPokemon.getPokemon())) {
-                                handleCandyDrop(player, defeatedPokemon.getBukkitEntity().getLocation());
-                            }
-                        }
-                    }
+                if (shouldDropCandyFromPokemon(pokemon)) {
+                    Object entityObj = wppObj.getClass().getMethod("getEntity").invoke(wppObj);
+                    Object bukkitEntity = entityObj.getClass().getMethod("getBukkitEntity").invoke(entityObj);
+                    Location location = ((org.bukkit.entity.Entity) bukkitEntity).getLocation();
+                    
+                    handleCandyDrop(player, location);
                 }
             }
+        } catch (Exception e) {
+            plugin.getLogger().warning("Error handling BeatWildPixelmonEvent: " + e.getMessage());
         }
     }
     
-    @SubscribeEvent
-    public void onPokemonCapture(CaptureEvent.SuccessfulCapture event) {
-        if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
-            return;
-        }
-        
-        if (!plugin.getConfigManager().canDropFromCapture()) {
-            return;
-        }
-        
-        Player player = event.getPlayer().getBukkitEntity();
-        Pokemon pokemon = event.getPokemon().getPokemon();
-        
-        if (shouldDropCandyFromPokemon(pokemon)) {
-            handleCandyDrop(player, event.getPokemon().getBukkitEntity().getLocation());
+    // This method will be called via reflection when CaptureEvent.SuccessfulCapture occurs
+    public void onPokemonCapture(Object event) {
+        try {
+            if (!plugin.getConfigManager().isPixelmonDropEnabled()) {
+                return;
+            }
+            
+            if (!plugin.getConfigManager().canDropFromCapture()) {
+                return;
+            }
+            
+            // Use reflection to get player and pokemon from capture event
+            Object playerObj = event.getClass().getMethod("getPlayer").invoke(event);
+            Player player = (Player) playerObj.getClass().getMethod("getBukkitEntity").invoke(playerObj);
+            
+            Object pixelmonEntityObj = event.getClass().getMethod("getPokemon").invoke(event);
+            Object pokemon = pixelmonEntityObj.getClass().getMethod("getPokemon").invoke(pixelmonEntityObj);
+            
+            if (shouldDropCandyFromPokemon(pokemon)) {
+                Object bukkitEntity = pixelmonEntityObj.getClass().getMethod("getBukkitEntity").invoke(pixelmonEntityObj);
+                Location location = ((org.bukkit.entity.Entity) bukkitEntity).getLocation();
+                
+                handleCandyDrop(player, location);
+            }
+        } catch (Exception e) {
+            plugin.getLogger().warning("Error handling CaptureEvent: " + e.getMessage());
         }
     }
     
-    private boolean shouldDropCandyFromPokemon(Pokemon pokemon) {
-        if (pokemon == null) {
-            return false;
+    private boolean shouldDropCandyFromPokemon(Object pokemon) {
+        try {
+            if (pokemon == null) {
+                return false;
+            }
+            
+            // Check if legendary using reflection
+            Method isLegendaryMethod = pokemon.getClass().getMethod("isLegendary");
+            boolean isLegendary = (Boolean) isLegendaryMethod.invoke(pokemon);
+            
+            if (isLegendary && !plugin.getConfigManager().canDropFromLegendary()) {
+                return false;
+            }
+            
+            // Check if ultra beast using reflection
+            try {
+                Method isUltraBeastMethod = pokemon.getClass().getMethod("isUltraBeast");
+                boolean isUltraBeast = (Boolean) isUltraBeastMethod.invoke(pokemon);
+                
+                if (isUltraBeast && !plugin.getConfigManager().canDropFromUltraBeast()) {
+                    return false;
+                }
+            } catch (NoSuchMethodException e) {
+                // Method doesn't exist in this version, ignore
+            }
+            
+            // Check if shiny using reflection
+            Method isShinyMethod = pokemon.getClass().getMethod("isShiny");
+            boolean isShiny = (Boolean) isShinyMethod.invoke(pokemon);
+            
+            if (isShiny && plugin.getConfigManager().hasShinyBonus()) {
+                return random.nextDouble() * 100.0 <= plugin.getConfigManager().getShinyDropChance();
+            }
+            
+            return true;
+            
+        } catch (Exception e) {
+            plugin.getLogger().warning("Error checking Pokemon properties: " + e.getMessage());
+            return true; // Default to allowing drops if we can't check
         }
-        
-        // Check if legendary/ultra beast drops are enabled
-        if (pokemon.isLegendary() && !plugin.getConfigManager().canDropFromLegendary()) {
-            return false;
-        }
-        
-        if (pokemon.isUltraBeast() && !plugin.getConfigManager().canDropFromUltraBeast()) {
-            return false;
-        }
-        
-        // Check if shiny Pokemon have increased drop rates
-        if (pokemon.isShiny() && plugin.getConfigManager().hasShinyBonus()) {
-            return random.nextDouble() * 100.0 <= plugin.getConfigManager().getShinyDropChance();
-        }
-        
-        return true;
     }
     
     private void handleCandyDrop(Player player, Location location) {

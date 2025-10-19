@@ -34,7 +34,8 @@ repositories {
 dependencies {
     compileOnly 'org.spigotmc:spigot-api:1.16.5-R0.1-SNAPSHOT'
     compileOnly 'com.github.MilkBowl:VaultAPI:1.7.1'
-    compileOnly 'com.pixelmonmod.pixelmon:Pixelmon-1.16.5-9.1.11-server:9.1.11'
+    // Note: Pixelmon dependency should be provided at runtime
+    // The plugin uses reflection to avoid compile-time dependency
 }
 
 processResources {

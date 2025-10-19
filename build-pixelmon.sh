@@ -20,9 +20,14 @@ else
     exit 1
 fi
 
+# Temporarily replace the main build.gradle with Pixelmon version
+echo "Switching to Pixelmon build configuration..."
+mv build.gradle build.gradle.backup
+cp build-pixelmon.gradle build.gradle
+
 # Build with Pixelmon configuration
 echo "Building with Pixelmon dependencies..."
-./gradlew clean build -b build-pixelmon.gradle
+./gradlew clean build
 
 # Check if build was successful
 if [ $? -eq 0 ]; then
@@ -30,8 +35,9 @@ if [ $? -eq 0 ]; then
     echo "Build successful!"
     echo "JAR file created: build/libs/TrickOrTreat-1.1.1-pixelmon.jar"
     
-    # Clean up - remove the active listener to prevent regular build issues
+    # Clean up - restore original build.gradle and remove the active listener
     echo "Cleaning up..."
+    mv build.gradle.backup build.gradle
     rm src/main/java/com/halloween/trickortreat/listeners/PixelmonDeathListener.java
     
     # Restore backup if it existed
@@ -44,6 +50,7 @@ else
     echo "Build failed! Check the error messages above."
     
     # Clean up on failure too
+    mv build.gradle.backup build.gradle
     rm src/main/java/com/halloween/trickortreat/listeners/PixelmonDeathListener.java
     
     if [ -f "src/main/java/com/halloween/trickortreat/listeners/PixelmonDeathListener.java.backup" ]; then
