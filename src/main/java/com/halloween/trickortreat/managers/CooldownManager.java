@@ -11,11 +11,14 @@ public class CooldownManager {
     
     private final TrickOrTreatPlugin plugin;
     private final Map<UUID, Long> rareCandyCooldowns;
+    private final Map<UUID, Long> candyUseCooldowns;
     private static final long RARE_CANDY_COOLDOWN = 60 * 60 * 1000L; // 1 hour in milliseconds
+    private static final long CANDY_USE_COOLDOWN = 3 * 1000L; // 3 seconds in milliseconds
     
     public CooldownManager(TrickOrTreatPlugin plugin) {
         this.plugin = plugin;
         this.rareCandyCooldowns = new HashMap<>();
+        this.candyUseCooldowns = new HashMap<>();
     }
     
     public boolean isOnRareCandyCooldown(Player player) {
@@ -77,5 +80,44 @@ public class CooldownManager {
     
     public void clearAllCooldowns() {
         rareCandyCooldowns.clear();
+        candyUseCooldowns.clear();
+    }
+    
+    // Candy use cooldown methods
+    public boolean isOnCandyUseCooldown(Player player) {
+        UUID playerId = player.getUniqueId();
+        Long cooldownEnd = candyUseCooldowns.get(playerId);
+        
+        if (cooldownEnd == null) {
+            return false;
+        }
+        
+        long currentTime = System.currentTimeMillis();
+        if (currentTime >= cooldownEnd) {
+            candyUseCooldowns.remove(playerId);
+            return false;
+        }
+        
+        return true;
+    }
+    
+    public void setCandyUseCooldown(Player player) {
+        UUID playerId = player.getUniqueId();
+        long cooldownEnd = System.currentTimeMillis() + CANDY_USE_COOLDOWN;
+        candyUseCooldowns.put(playerId, cooldownEnd);
+    }
+    
+    public long getCandyUseCooldownRemaining(Player player) {
+        UUID playerId = player.getUniqueId();
+        Long cooldownEnd = candyUseCooldowns.get(playerId);
+        
+        if (cooldownEnd == null) {
+            return 0;
+        }
+        
+        long currentTime = System.currentTimeMillis();
+        long remaining = cooldownEnd - currentTime;
+        
+        return Math.max(0, remaining);
     }
 }

@@ -41,7 +41,16 @@ public class CandyUseListener implements Listener {
             return;
         }
         
+        // Check for use cooldown
+        if (plugin.getCooldownManager().isOnCandyUseCooldown(player)) {
+            long remaining = plugin.getCooldownManager().getCandyUseCooldownRemaining(player);
+            double seconds = remaining / 1000.0;
+            player.sendMessage(String.format("§c⏰ You must wait %.1f seconds before using another candy!", seconds));
+            return;
+        }
+        
         item.setAmount(item.getAmount() - 1);
+        plugin.getCooldownManager().setCandyUseCooldown(player);
         
         player.playSound(player.getLocation(), Sound.ENTITY_GENERIC_EAT, 1.0f, 1.0f);
         

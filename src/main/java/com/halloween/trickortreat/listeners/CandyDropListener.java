@@ -41,25 +41,29 @@ public class CandyDropListener implements Listener {
         
         if (roll <= dropChance) {
             double rareRoll = random.nextDouble() * 100.0;
+            boolean shouldGiveRareCandy = rareRoll <= 1.0 && plugin.getRareCandyManager().canReceiveRareCandy(killer);
             
-            if (rareRoll <= 1.0 && plugin.getRareCandyManager().canReceiveRareCandy(killer)) {
-                if (plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
-                    long remaining = plugin.getCooldownManager().getRareCandyCooldownRemaining(killer);
-                    String timeLeft = plugin.getCooldownManager().formatCooldownTime(remaining);
-                    killer.sendMessage("§c⏰ You must wait " + timeLeft + " before receiving another rare candy!");
-                } else {
-                    ItemStack rareCandy = plugin.getRareCandyManager().createRareCandyItem();
-                    entity.getWorld().dropItemNaturally(entity.getLocation(), rareCandy);
-                    plugin.getRareCandyManager().recordRareCandyDrop(killer);
-                    plugin.getCooldownManager().setRareCandyCooldown(killer);
-                    
-                    killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
-                }
+            if (shouldGiveRareCandy && !plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
+                // Give rare candy
+                ItemStack rareCandy = plugin.getRareCandyManager().createRareCandyItem();
+                entity.getWorld().dropItemNaturally(entity.getLocation(), rareCandy);
+                plugin.getRareCandyManager().recordRareCandyDrop(killer);
+                plugin.getCooldownManager().setRareCandyCooldown(killer);
+                
+                killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
             } else {
+                // Give regular candy (either rare candy was on cooldown or regular candy was rolled)
                 ItemStack candy = plugin.getCandyManager().createCandyItem();
                 entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
                 
                 killer.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
+                
+                // If rare candy was on cooldown, show cooldown message as well
+                if (shouldGiveRareCandy && plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
+                    long remaining = plugin.getCooldownManager().getRareCandyCooldownRemaining(killer);
+                    String timeLeft = plugin.getCooldownManager().formatCooldownTime(remaining);
+                    killer.sendMessage("§c⏰ Rare candy on cooldown (" + timeLeft + " remaining), gave regular candy instead!");
+                }
             }
         }
     }
