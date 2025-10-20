@@ -51,19 +51,15 @@ public class CandyDropListener implements Listener {
                 plugin.getCooldownManager().setRareCandyCooldown(killer);
                 
                 killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
+            } else if (shouldGiveRareCandy && plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
+                // Rare candy was rolled but player is on cooldown - do nothing (no drop, no message)
+                return;
             } else {
-                // Give regular candy (either rare candy was on cooldown or regular candy was rolled)
+                // Give regular candy (regular candy was rolled)
                 ItemStack candy = plugin.getCandyManager().createCandyItem();
                 entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
                 
                 killer.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
-                
-                // If rare candy was on cooldown, show cooldown message as well
-                if (shouldGiveRareCandy && plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
-                    long remaining = plugin.getCooldownManager().getRareCandyCooldownRemaining(killer);
-                    String timeLeft = plugin.getCooldownManager().formatCooldownTime(remaining);
-                    killer.sendMessage("§c⏰ Rare candy on cooldown (" + timeLeft + " remaining), gave regular candy instead!");
-                }
             }
         }
     }
