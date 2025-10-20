@@ -1,9 +1,9 @@
-candy-drops:
+candy-drop:
   enabled: true
-  drop-chance: 10.0
-  from-hostile: true
-  from-passive: false
-  from-boss: true
+  drop-chance: 15.0
+  drop-from-hostile: true
+  drop-from-passive: true
+  drop-from-boss: true
 
 trick-or-treat:
   trick-chance: 50.0

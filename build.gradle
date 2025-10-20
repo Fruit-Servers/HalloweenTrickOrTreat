@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.halloween'
-version = '1.1.1'
+version = '1.1.2'
 description = 'A Halloween-themed trick or treat plugin for Minecraft'
 
 java {

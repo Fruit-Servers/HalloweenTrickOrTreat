@@ -40,9 +40,6 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new CandyDropListener(this), this);
         getServer().getPluginManager().registerEvents(new CandyUseListener(this), this);
         
-        // Note: Pixelmon integration requires a separate Forge bridge mod
-        // See PIXELMON_BRIDGE_SOLUTION.md for proper implementation
-        
         TrickOrTreatCommand commandHandler = new TrickOrTreatCommand(this);
         getCommand("trickortreat").setExecutor(commandHandler);
         getCommand("trickortreat").setTabCompleter(commandHandler);
@@ -92,5 +89,4 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         configManager = new ConfigManager(this);
         getLogger().info("Configuration reloaded!");
     }
-    
 }

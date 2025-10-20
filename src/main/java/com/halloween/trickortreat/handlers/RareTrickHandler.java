@@ -104,7 +104,7 @@ public class RareTrickHandler {
                 for (int z = -radius; z <= radius; z++) {
                     Location loc = center.clone().add(x, y, z);
                     
-                    if (loc.distance(center) <= radius && loc.getBlock().getType() == Material.AIR) {
+                    if (loc.distance(center) <= radius && isSafeToPlaceCobweb(loc)) {
                         loc.getBlock().setType(Material.COBWEB);
                         
                         new BukkitRunnable() {
@@ -121,5 +121,93 @@ public class RareTrickHandler {
         }
         
         player.sendMessage("§8🕸️ You're trapped in a massive cobweb!");
+    }
+    
+    private boolean isSafeToPlaceCobweb(Location loc) {
+        Material blockType = loc.getBlock().getType();
+        
+        // Only place cobwebs in air blocks
+        if (blockType != Material.AIR) {
+            return false;
+        }
+        
+        // Check if any adjacent blocks are containers to be extra safe
+        Location[] adjacentLocations = {
+            loc.clone().add(1, 0, 0),
+            loc.clone().add(-1, 0, 0),
+            loc.clone().add(0, 1, 0),
+            loc.clone().add(0, -1, 0),
+            loc.clone().add(0, 0, 1),
+            loc.clone().add(0, 0, -1)
+        };
+        
+        for (Location adjLoc : adjacentLocations) {
+            if (isContainerBlock(adjLoc.getBlock().getType())) {
+                return false;
+            }
+        }
+        
+        return true;
+    }
+    
+    private boolean isContainerBlock(Material material) {
+        switch (material) {
+            // Storage containers
+            case CHEST:
+            case TRAPPED_CHEST:
+            case ENDER_CHEST:
+            case SHULKER_BOX:
+            case WHITE_SHULKER_BOX:
+            case ORANGE_SHULKER_BOX:
+            case MAGENTA_SHULKER_BOX:
+            case LIGHT_BLUE_SHULKER_BOX:
+            case YELLOW_SHULKER_BOX:
+            case LIME_SHULKER_BOX:
+            case PINK_SHULKER_BOX:
+            case GRAY_SHULKER_BOX:
+            case LIGHT_GRAY_SHULKER_BOX:
+            case CYAN_SHULKER_BOX:
+            case PURPLE_SHULKER_BOX:
+            case BLUE_SHULKER_BOX:
+            case BROWN_SHULKER_BOX:
+            case GREEN_SHULKER_BOX:
+            case RED_SHULKER_BOX:
+            case BLACK_SHULKER_BOX:
+            case BARREL:
+            
+            // Functional blocks with inventories
+            case FURNACE:
+            case BLAST_FURNACE:
+            case SMOKER:
+            case DROPPER:
+            case DISPENSER:
+            case HOPPER:
+            
+            // Brewing and enchanting
+            case BREWING_STAND:
+            case ENCHANTING_TABLE:
+            
+            // Workstations
+            case CRAFTING_TABLE:
+            case CARTOGRAPHY_TABLE:
+            case FLETCHING_TABLE:
+            case SMITHING_TABLE:
+            case STONECUTTER:
+            case LOOM:
+            case GRINDSTONE:
+            case ANVIL:
+            case CHIPPED_ANVIL:
+            case DAMAGED_ANVIL:
+            
+            // Other important blocks
+            case BEACON:
+            case JUKEBOX:
+            case LECTERN:
+            case COMPOSTER:
+                return true;
+                
+            default:
+                return false;
+        }
     }
 }

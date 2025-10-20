@@ -1,10 +1,10 @@
-name: TrickOrTreat
-version: ${version}
+name: HalloweenTrickOrTreat
+version: '${version}'
 main: com.halloween.trickortreat.TrickOrTreatPlugin
-api-version: 1.20
-authors: [YourName]
-description: A Halloween-themed trick or treat plugin
-softdepend: [Vault, LuckPerms]
+api-version: '1.20'
+author: Halloween Team
+description: A festive Halloween trick or treat plugin
+softdepend: [Vault]
 
 commands:
   trickortreat:
