@@ -12,6 +12,10 @@ commands:
     usage: /<command> [reload|give]
     aliases: [tot, halloween]
     permission: trickortreat.admin
+  triggercandydrop:
+    description: Trigger candy drop logic for external use (Pixelmon integration)
+    usage: /<command> <player> [force-rare]
+    permission: trickortreat.admin
 
 permissions:
   trickortreat.admin:
