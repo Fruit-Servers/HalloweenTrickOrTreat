@@ -1,13 +1,17 @@
 package com.halloween.trickortreat.rewards;
 
 public enum RareTreat {
-    TOKEN("Token", "You received a token!", "token"),
-    COLLECTABLE_PASS("Collectable Pass", "You received a collectable pass!", "collectpass"),
-    FRUITSTERS_KEY("Fruitsters Key", "You received a Fruitsters key!", "fruitkey"),
-    SPOOKEY("SpooKey", "You received a SpooKey!", "spookey"),
-    BLOCK_OF_NETHERITE("Block of Netherite", "You received a block of netherite!", "netherite"),
-    WITCH_SPAWNER("Witch Spawner", "You received a witch spawner!", "wspawn"),
-    SPIDER_SPAWNER("Spider Spawner", "You received a spider spawner!", "sspawn");
+    EVENT_MEDAL("Event Medal", "You received a Skyblock Event Medal!", "event-medal"),
+    TOKEN("Token", "You received a Skyblock Token!", "token"),
+    TRADING_CARD("Trading Card", "You've received a trading card!", "trading-card"),
+    ANCIENT_DEBRIS("Ancient Debris", "You received 2 Ancient Debris!", "ancient-debris"),
+    MONEY("Money", "You received $5000!", "money"),
+    VOTE_SHARD("Vote Shard", "You received 1 Vote Shard!", "vote-shard"),
+    END_VOUCHER("End Voucher", "You received a 5 minute End Voucher!", "end-voucher"),
+    NETHER_VOUCHER("Nether Voucher", "You received a 5 minute Nether Voucher!", "nether-voucher"),
+    DEEP_DARK_VOUCHER("Deep Dark Voucher", "You received a 5 minute Deep Dark Voucher!", "deep-dark-voucher"),
+    GEODE_FORTUNE("Geode of Fortune", "You received a Geode of Fortune Enchanted Book!", "geode-fortune"),
+    GOD_VOUCHER("God Voucher", "You received a 30 minute God Voucher!", "god-voucher");
     
     private final String displayName;
     private final String description;

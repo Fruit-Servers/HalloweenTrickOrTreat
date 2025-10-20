@@ -3,7 +3,7 @@ plugins {
 }
 
 group = 'com.halloween'
-version = '1.2.1'
+version = '1.2.0'
 description = 'A Halloween-themed trick or treat plugin for Minecraft'
 
 java {
@@ -42,5 +42,5 @@ processResources {
 }
 
 jar {
-    archiveFileName = "TrickOrTreat-${version}.jar"
+    archiveFileName = "TrickOrTreatSkyblock-${version}.jar"
 }

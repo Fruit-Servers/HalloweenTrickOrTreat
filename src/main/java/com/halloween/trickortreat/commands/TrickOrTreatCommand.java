@@ -267,7 +267,7 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("cooldown")) {
             completions.addAll(Arrays.asList("check", "clear"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("item")) {
-            completions.addAll(Arrays.asList("token", "collectpass", "fruitkey", "spookey", "wspawn", "sspawn"));
+            completions.addAll(Arrays.asList("event-medal", "token", "trading-card", "ancient-debris", "money", "vote-shard", "end-voucher", "nether-voucher", "deep-dark-voucher", "geode-fortune", "god-voucher"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("cooldown")) {
             if (args[1].equalsIgnoreCase("clear")) {
                 completions.add("all");

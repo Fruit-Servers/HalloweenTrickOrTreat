@@ -1,4 +1,4 @@
-name: HalloweenTrickOrTreat
+name: HalloweenTrickOrTreatSkyblock
 version: '${version}'
 main: com.halloween.trickortreat.TrickOrTreatPlugin
 api-version: '1.20'
