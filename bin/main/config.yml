@@ -108,18 +108,6 @@ rare-treats:
       name: ""
       lore:
         - ""
-    trading-card:
-      enabled: true
-      material: 
-      name: ""
-      lore:
-        - ""
-    money:
-      enabled: true
-      material: 
-      name: ""
-      lore:
-        - ""
     vote-shard:
       enabled: true
       material: 
