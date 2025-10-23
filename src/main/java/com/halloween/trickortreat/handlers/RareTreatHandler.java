@@ -2,7 +2,6 @@ package com.halloween.trickortreat.handlers;
 
 import com.halloween.trickortreat.TrickOrTreatPlugin;
 import com.halloween.trickortreat.rewards.RareTreat;
-import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,49 +15,27 @@ public class RareTreatHandler {
     
     public void applyRareTreat(Player player, RareTreat treat) {
         switch (treat) {
-            case EVENT_MEDAL:
-                applyEventMedal(player);
-                break;
             case TOKEN:
                 applyToken(player);
                 break;
-            case TRADING_CARD:
-                applyTradingCard(player);
+            case COLLECTPASS:
+                applyCollectPass(player);
                 break;
-            case ANCIENT_DEBRIS:
-                applyAncientDebris(player);
+            case FRUITKEY:
+                applyFruitKey(player);
                 break;
-            case MONEY:
-                applyMoney(player);
+            case SPOOKEY:
+                applySpookKey(player);
                 break;
-            case VOTE_SHARD:
-                applyVoteShard(player);
+            case NETHERITE:
+                applyNetherite(player);
                 break;
-            case END_VOUCHER:
-                applyEndVoucher(player);
+            case WSPAWN:
+                applyWitherSpawn(player);
                 break;
-            case NETHER_VOUCHER:
-                applyNetherVoucher(player);
+            case SSPAWN:
+                applySkeletonSpawn(player);
                 break;
-            case DEEP_DARK_VOUCHER:
-                applyDeepDarkVoucher(player);
-                break;
-            case GEODE_FORTUNE:
-                applyGeodeFortune(player);
-                break;
-            case GOD_VOUCHER:
-                applyGodVoucher(player);
-                break;
-        }
-    }
-    
-    private void applyEventMedal(Player player) {
-        ItemStack medal = plugin.getConfigManager().getCustomRareTreatItem("event-medal");
-        if (medal != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), medal);
-            player.sendMessage("§6🏅 You received a Skyblock Event Medal!");
-        } else {
-            player.sendMessage("§c⚠ Event Medal reward is not configured! Please contact an administrator.");
         }
     }
     
@@ -66,89 +43,69 @@ public class RareTreatHandler {
         ItemStack token = plugin.getConfigManager().getCustomRareTreatItem("token");
         if (token != null) {
             player.getWorld().dropItemNaturally(player.getLocation(), token);
-            player.sendMessage("§a💰 You received a Skyblock Token!");
+            player.sendMessage("§a💰 You received a Halloween Token!");
         } else {
             player.sendMessage("§c⚠ Token reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyTradingCard(Player player) {
-        // Execute the trading card command
-        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), 
-            "cards giverandomcard RARE " + player.getName() + " 1");
-        player.sendMessage("§d🃏 You've received a trading card!");
-    }
-    
-    private void applyAncientDebris(Player player) {
-        ItemStack ancientDebris = new ItemStack(Material.ANCIENT_DEBRIS, 2);
-        player.getWorld().dropItemNaturally(player.getLocation(), ancientDebris);
-        player.sendMessage("§8💎 You received 2 Ancient Debris!");
-    }
-    
-    private void applyMoney(Player player) {
-        // Execute the economy command
-        plugin.getServer().dispatchCommand(plugin.getServer().getConsoleSender(), 
-            "eco give " + player.getName() + " 5000");
-        player.sendMessage("§2💵 You received $5000!");
-    }
-    
-    private void applyVoteShard(Player player) {
-        ItemStack shard = plugin.getConfigManager().getCustomRareTreatItem("vote-shard");
-        if (shard != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), shard);
-            player.sendMessage("§b💎 You received 1 Vote Shard!");
+    private void applyCollectPass(Player player) {
+        ItemStack collectpass = plugin.getConfigManager().getCustomRareTreatItem("collectpass");
+        if (collectpass != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), collectpass);
+            player.sendMessage("§b🎫 You received a Collect Pass!");
         } else {
-            player.sendMessage("§c⚠ Vote Shard reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Collect Pass reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyEndVoucher(Player player) {
-        ItemStack voucher = plugin.getConfigManager().getCustomRareTreatItem("end-voucher");
-        if (voucher != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), voucher);
-            player.sendMessage("§5🎫 You received a 5 minute End Voucher!");
+    private void applyFruitKey(Player player) {
+        ItemStack fruitkey = plugin.getConfigManager().getCustomRareTreatItem("fruitkey");
+        if (fruitkey != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), fruitkey);
+            player.sendMessage("§6🗝️ You received a Fruit Key!");
         } else {
-            player.sendMessage("§c⚠ End Voucher reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Fruit Key reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyNetherVoucher(Player player) {
-        ItemStack voucher = plugin.getConfigManager().getCustomRareTreatItem("nether-voucher");
-        if (voucher != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), voucher);
-            player.sendMessage("§c🎫 You received a 5 minute Nether Voucher!");
+    private void applySpookKey(Player player) {
+        ItemStack spookey = plugin.getConfigManager().getCustomRareTreatItem("spookey");
+        if (spookey != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), spookey);
+            player.sendMessage("§5🗝️ You received a Spook Key!");
         } else {
-            player.sendMessage("§c⚠ Nether Voucher reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Spook Key reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyDeepDarkVoucher(Player player) {
-        ItemStack voucher = plugin.getConfigManager().getCustomRareTreatItem("deep-dark-voucher");
-        if (voucher != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), voucher);
-            player.sendMessage("§0🎫 You received a 5 minute Deep Dark Voucher!");
+    private void applyNetherite(Player player) {
+        ItemStack netherite = plugin.getConfigManager().getCustomRareTreatItem("netherite");
+        if (netherite != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), netherite);
+            player.sendMessage("§8💎 You received Netherite!");
         } else {
-            player.sendMessage("§c⚠ Deep Dark Voucher reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Netherite reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyGeodeFortune(Player player) {
-        ItemStack geode = plugin.getConfigManager().getCustomRareTreatItem("geode-fortune");
-        if (geode != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), geode);
-            player.sendMessage("§e📖 You received a Geode of Fortune Enchanted Book!");
+    private void applyWitherSpawn(Player player) {
+        ItemStack wspawn = plugin.getConfigManager().getCustomRareTreatItem("wspawn");
+        if (wspawn != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), wspawn);
+            player.sendMessage("§0💀 You received a Wither Spawn!");
         } else {
-            player.sendMessage("§c⚠ Geode of Fortune reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Wither Spawn reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyGodVoucher(Player player) {
-        ItemStack voucher = plugin.getConfigManager().getCustomRareTreatItem("god-voucher");
-        if (voucher != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), voucher);
-            player.sendMessage("§6🎫 You received a 30 minute God Voucher!");
+    private void applySkeletonSpawn(Player player) {
+        ItemStack sspawn = plugin.getConfigManager().getCustomRareTreatItem("sspawn");
+        if (sspawn != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), sspawn);
+            player.sendMessage("§f💀 You received a Skeleton Spawn!");
         } else {
-            player.sendMessage("§c⚠ God Voucher reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Skeleton Spawn reward is not configured! Please contact an administrator.");
         }
     }
 }

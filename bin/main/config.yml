@@ -84,61 +84,45 @@ tricks:
 rare-treats:
   treat-chance: 50.0
   individual-chances:
-    event-medal: 10
-    token: 5
-    trading-card: 10
-    ancient-debris: 10
-    money: 15
-    vote-shard: 5
-    end-voucher: 10
-    nether-voucher: 10
-    deep-dark-voucher: 5
-    geode-fortune: 10
-    god-voucher: 10
+    token: 10
+    collectpass: 10
+    fruitkey: 20
+    spookey: 20
+    netherite: 10
+    wspawn: 5
+    sspawn: 15
   items:
-    event-medal:
-      enabled: true
-      material: 
-      name: ""
-      lore:
-        - ""
     token:
       enabled: true
       material: 
       name: ""
       lore:
         - ""
-    vote-shard:
+    collectpass:
       enabled: true
       material: 
       name: ""
       lore:
         - ""
-    end-voucher:
+    fruitkey:
+      enabled: true
+      material:   
+      name: ""
+      lore:
+        - ""
+    spookey:
       enabled: true
       material: 
       name: ""
       lore:
         - ""
-    nether-voucher:
+    wspawn:
       enabled: true
       material: 
       name: ""
       lore:
         - ""
-    deep-dark-voucher:
-      enabled: true
-      material: 
-      name: ""
-      lore:
-        - ""
-    geode-fortune:
-      enabled: true
-      material: 
-      name: ""
-      lore:
-        - ""
-    god-voucher:
+    sspawn:
       enabled: true
       material: 
       name: ""
