@@ -41,25 +41,24 @@ public class CandyDropListener implements Listener {
         
         if (roll <= dropChance) {
             double rareRoll = random.nextDouble() * 100.0;
-            boolean shouldGiveRareCandy = rareRoll <= 1.0 && plugin.getRareCandyManager().canReceiveRareCandy(killer);
+            boolean rareRolled = rareRoll <= 1.0;
+            boolean canReceiveRare = plugin.getRareCandyManager().canReceiveRareCandy(killer);
+            boolean onCooldown = plugin.getCooldownManager().isOnRareCandyCooldown(killer);
             
-            if (shouldGiveRareCandy && !plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
-                // Give rare candy
+            if (rareRolled && canReceiveRare && !onCooldown) {
+                // Give rare candy - all conditions met
                 ItemStack rareCandy = plugin.getRareCandyManager().createRareCandyItem();
                 entity.getWorld().dropItemNaturally(entity.getLocation(), rareCandy);
                 plugin.getRareCandyManager().recordRareCandyDrop(killer);
                 plugin.getCooldownManager().setRareCandyCooldown(killer);
                 
                 killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
-            } else if (shouldGiveRareCandy && plugin.getCooldownManager().isOnRareCandyCooldown(killer)) {
-                // Rare candy was rolled but player is on cooldown - do nothing (no drop, no message)
-                return;
             } else {
-                // Give regular candy (regular candy was rolled)
+                // Give regular candy (either rare wasn't rolled, player can't receive rare, or on cooldown)
                 ItemStack candy = plugin.getCandyManager().createCandyItem();
                 entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
                 
-                killer.sendMessage(plugin.getConfigManager().getMessage("candy-received"));
+                // Only send message for rare candies now - removed common candy message spam
             }
         }
     }

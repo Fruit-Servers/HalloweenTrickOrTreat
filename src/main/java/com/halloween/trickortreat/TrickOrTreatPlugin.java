@@ -95,7 +95,7 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     
     public void reloadPluginConfig() {
         reloadConfig();
-        configManager = new ConfigManager(this);
+        configManager.loadConfigValues();
         getLogger().info("Configuration reloaded!");
     }
 }
