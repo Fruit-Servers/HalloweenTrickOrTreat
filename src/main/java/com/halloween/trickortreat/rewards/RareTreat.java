@@ -1,13 +1,13 @@
 package com.halloween.trickortreat.rewards;
 
 public enum RareTreat {
-    TOKEN("Token", "You received a Halloween Token!", "token"),
-    COLLECTPASS("Collect Pass", "You received a Collect Pass!", "collectpass"),
-    FRUITKEY("Fruit Key", "You received a Fruit Key!", "fruitkey"),
-    SPOOKEY("Spook Key", "You received a Spook Key!", "spookey"),
-    NETHERITE("Netherite", "You received Netherite!", "netherite"),
-    WSPAWN("Wither Spawn", "You received a Wither Spawn!", "wspawn"),
-    SSPAWN("Skeleton Spawn", "You received a Skeleton Spawn!", "sspawn");
+    TOKEN("Token", "You received a token!", "token"),
+    COLLECTABLE_PASS("Collectable Pass", "You received a collectable pass!", "collectpass"),
+    FRUITSTERS_KEY("Fruitsters Key", "You received a Fruitsters key!", "fruitkey"),
+    SPOOKEY("SpooKey", "You received a SpooKey!", "spookey"),
+    BLOCK_OF_NETHERITE("Block of Netherite", "You received a block of netherite!", "netherite"),
+    WITCH_SPAWNER("Witch Spawner", "You received a witch spawner!", "wspawn"),
+    SPIDER_SPAWNER("Spider Spawner", "You received a spider spawner!", "sspawn");
     
     private final String displayName;
     private final String description;

@@ -1,4 +1,4 @@
-name: HalloweenTrickOrTreatSkyblock
+name: HalloweenTrickOrTreat
 version: '${version}'
 main: com.halloween.trickortreat.TrickOrTreatPlugin
 api-version: '1.20'
@@ -11,10 +11,6 @@ commands:
     description: Main command for the Halloween Trick or Treat plugin
     usage: /<command> [reload|give]
     aliases: [tot, halloween]
-    permission: trickortreat.admin
-  triggercandydrop:
-    description: Trigger candy drop logic for external use (Pixelmon integration)
-    usage: /<command> <player> [force-rare]
     permission: trickortreat.admin
 
 permissions:

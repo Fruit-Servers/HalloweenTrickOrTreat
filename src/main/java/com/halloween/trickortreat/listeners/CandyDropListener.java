@@ -53,12 +53,15 @@ public class CandyDropListener implements Listener {
                 plugin.getCooldownManager().setRareCandyCooldown(killer);
                 
                 killer.sendMessage(plugin.getConfigManager().getMessage("rare-candy-received"));
+            } else if (rareRolled && (onCooldown || !canReceiveRare)) {
+                // Rare candy was rolled but player can't receive it - do nothing
+                return;
             } else {
-                // Give regular candy (either rare wasn't rolled, player can't receive rare, or on cooldown)
+                // Give regular candy (regular candy was rolled)
                 ItemStack candy = plugin.getCandyManager().createCandyItem();
                 entity.getWorld().dropItemNaturally(entity.getLocation(), candy);
                 
-                // Only send message for rare candies now - removed common candy message spam
+                // Removed spam message for regular candy drops
             }
         }
     }

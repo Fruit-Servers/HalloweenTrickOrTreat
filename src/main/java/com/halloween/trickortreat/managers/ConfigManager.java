@@ -12,33 +12,31 @@ public class ConfigManager {
     private final TrickOrTreatPlugin plugin;
     private final FileConfiguration config;
     
-    // Cached config values to avoid repeated file access
+    // Cached values for performance
     private boolean candyDropEnabled;
     private double candyDropChance;
-    private boolean canDropFromHostile;
-    private boolean canDropFromPassive;
-    private boolean canDropFromBoss;
+    private boolean dropFromHostile;
+    private boolean dropFromPassive;
+    private boolean dropFromBoss;
     private double trickChance;
-    private double rareTreatChance;
-    private double rareTrickChance;
-    private String messagePrefix;
     
     public ConfigManager(TrickOrTreatPlugin plugin) {
         this.plugin = plugin;
         this.config = plugin.getConfig();
-        loadConfigValues();
+        loadCachedValues();
     }
     
-    public void loadConfigValues() {
+    private void loadCachedValues() {
         this.candyDropEnabled = config.getBoolean("candy-drop.enabled", true);
         this.candyDropChance = config.getDouble("candy-drop.drop-chance", 15.0);
-        this.canDropFromHostile = config.getBoolean("candy-drop.drop-from-hostile", true);
-        this.canDropFromPassive = config.getBoolean("candy-drop.drop-from-passive", true);
-        this.canDropFromBoss = config.getBoolean("candy-drop.drop-from-boss", true);
+        this.dropFromHostile = config.getBoolean("candy-drop.drop-from-hostile", true);
+        this.dropFromPassive = config.getBoolean("candy-drop.drop-from-passive", true);
+        this.dropFromBoss = config.getBoolean("candy-drop.drop-from-boss", true);
         this.trickChance = config.getDouble("trick-or-treat.trick-chance", 50.0);
-        this.rareTreatChance = config.getDouble("rare-treats.treat-chance", 50.0);
-        this.rareTrickChance = config.getDouble("rare-tricks.trick-chance", 50.0);
-        this.messagePrefix = config.getString("messages.prefix", "&6[&c🎃&6] &r");
+    }
+    
+    public void reloadCache() {
+        loadCachedValues();
     }
     
     public boolean isCandyDropEnabled() {
@@ -50,15 +48,15 @@ public class ConfigManager {
     }
     
     public boolean canDropFromHostile() {
-        return canDropFromHostile;
+        return dropFromHostile;
     }
     
     public boolean canDropFromPassive() {
-        return canDropFromPassive;
+        return dropFromPassive;
     }
     
     public boolean canDropFromBoss() {
-        return canDropFromBoss;
+        return dropFromBoss;
     }
     
     public double getTrickChance() {
@@ -86,8 +84,9 @@ public class ConfigManager {
     }
     
     public String getMessage(String key) {
+        String prefix = config.getString("messages.prefix", "&6[&c🎃&6] &r");
         String message = config.getString("messages." + key, "");
-        return ChatColor.translateAlternateColorCodes('&', messagePrefix + message);
+        return ChatColor.translateAlternateColorCodes('&', prefix + message);
     }
     
     public String getMessageNoPrefix(String key) {
@@ -119,11 +118,11 @@ public class ConfigManager {
     }
     
     public double getRareTreatChance() {
-        return rareTreatChance;
+        return config.getDouble("rare-treats.treat-chance", 50.0);
     }
     
     public double getRareTrickChance() {
-        return rareTrickChance;
+        return config.getDouble("rare-tricks.trick-chance", 50.0);
     }
     
     public int getRareTreatWeight(String treatKey) {

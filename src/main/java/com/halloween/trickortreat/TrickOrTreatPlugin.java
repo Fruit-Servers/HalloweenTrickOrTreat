@@ -1,7 +1,6 @@
 package com.halloween.trickortreat;
 
 import com.halloween.trickortreat.commands.TrickOrTreatCommand;
-import com.halloween.trickortreat.commands.TriggerCandyDropCommand;
 import com.halloween.trickortreat.listeners.CandyDropListener;
 import com.halloween.trickortreat.listeners.CandyUseListener;
 import com.halloween.trickortreat.managers.CandyManager;
@@ -23,7 +22,6 @@ public class TrickOrTreatPlugin extends JavaPlugin {
     private RareTrickOrTreatManager rareTrickOrTreatManager;
     private EconomyManager economyManager;
     private CooldownManager cooldownManager;
-    private TriggerCandyDropCommand triggerCandyDropCommand;
     
     @Override
     public void onEnable() {
@@ -45,9 +43,6 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         TrickOrTreatCommand commandHandler = new TrickOrTreatCommand(this);
         getCommand("trickortreat").setExecutor(commandHandler);
         getCommand("trickortreat").setTabCompleter(commandHandler);
-        
-        this.triggerCandyDropCommand = new TriggerCandyDropCommand(this);
-        getCommand("triggercandydrop").setExecutor(triggerCandyDropCommand);
         
         getLogger().info("🎃 Halloween Trick or Treat plugin has been enabled!");
     }
@@ -89,13 +84,10 @@ public class TrickOrTreatPlugin extends JavaPlugin {
         return cooldownManager;
     }
     
-    public TriggerCandyDropCommand getTriggerCandyDropCommand() {
-        return triggerCandyDropCommand;
-    }
-    
     public void reloadPluginConfig() {
         reloadConfig();
-        configManager.loadConfigValues();
+        configManager = new ConfigManager(this);
+        configManager.reloadCache();
         getLogger().info("Configuration reloaded!");
     }
 }

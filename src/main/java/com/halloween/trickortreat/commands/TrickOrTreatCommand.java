@@ -156,7 +156,7 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         }
         
         String itemKey = args[2].toLowerCase();
-        String[] validKeys = {"token", "collectpass", "fruitkey", "spookey", "netherite", "wspawn", "sspawn"};
+        String[] validKeys = {"token", "collectpass", "fruitkey", "spookey", "wspawn", "sspawn"};
         
         boolean validKey = false;
         for (String key : validKeys) {
@@ -167,7 +167,7 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         }
         
         if (!validKey) {
-            sender.sendMessage(ChatColor.RED + "Invalid item type! Valid types: token, collectpass, fruitkey, spookey, netherite, wspawn, sspawn");
+            sender.sendMessage(ChatColor.RED + "Invalid item type! Valid types: token, collectpass, fruitkey, spookey, wspawn, sspawn");
             return;
         }
         
@@ -267,7 +267,7 @@ public class TrickOrTreatCommand implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("cooldown")) {
             completions.addAll(Arrays.asList("check", "clear"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("set") && args[1].equalsIgnoreCase("item")) {
-            completions.addAll(Arrays.asList("token", "collectpass", "fruitkey", "spookey", "netherite", "wspawn", "sspawn"));
+            completions.addAll(Arrays.asList("token", "collectpass", "fruitkey", "spookey", "wspawn", "sspawn"));
         } else if (args.length == 3 && args[0].equalsIgnoreCase("cooldown")) {
             if (args[1].equalsIgnoreCase("clear")) {
                 completions.add("all");

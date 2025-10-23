@@ -2,6 +2,7 @@ package com.halloween.trickortreat.handlers;
 
 import com.halloween.trickortreat.TrickOrTreatPlugin;
 import com.halloween.trickortreat.rewards.RareTreat;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -18,23 +19,23 @@ public class RareTreatHandler {
             case TOKEN:
                 applyToken(player);
                 break;
-            case COLLECTPASS:
-                applyCollectPass(player);
+            case COLLECTABLE_PASS:
+                applyCollectablePass(player);
                 break;
-            case FRUITKEY:
-                applyFruitKey(player);
+            case FRUITSTERS_KEY:
+                applyFruitstersKey(player);
                 break;
             case SPOOKEY:
-                applySpookKey(player);
+                applySpooKey(player);
                 break;
-            case NETHERITE:
-                applyNetherite(player);
+            case BLOCK_OF_NETHERITE:
+                applyBlockOfNetherite(player);
                 break;
-            case WSPAWN:
-                applyWitherSpawn(player);
+            case WITCH_SPAWNER:
+                applyWitchSpawner(player);
                 break;
-            case SSPAWN:
-                applySkeletonSpawn(player);
+            case SPIDER_SPAWNER:
+                applySpiderSpawner(player);
                 break;
         }
     }
@@ -43,69 +44,65 @@ public class RareTreatHandler {
         ItemStack token = plugin.getConfigManager().getCustomRareTreatItem("token");
         if (token != null) {
             player.getWorld().dropItemNaturally(player.getLocation(), token);
-            player.sendMessage("§a💰 You received a Halloween Token!");
+            player.sendMessage("§a💰 You received a Token!");
         } else {
             player.sendMessage("§c⚠ Token reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyCollectPass(Player player) {
-        ItemStack collectpass = plugin.getConfigManager().getCustomRareTreatItem("collectpass");
-        if (collectpass != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), collectpass);
-            player.sendMessage("§b🎫 You received a Collect Pass!");
+    private void applyCollectablePass(Player player) {
+        ItemStack pass = plugin.getConfigManager().getCustomRareTreatItem("collectpass");
+        if (pass != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), pass);
+            player.sendMessage("§d🎫 You received a Collectable Pass!");
         } else {
-            player.sendMessage("§c⚠ Collect Pass reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Collectable Pass reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyFruitKey(Player player) {
-        ItemStack fruitkey = plugin.getConfigManager().getCustomRareTreatItem("fruitkey");
-        if (fruitkey != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), fruitkey);
-            player.sendMessage("§6🗝️ You received a Fruit Key!");
+    private void applyFruitstersKey(Player player) {
+        ItemStack key = plugin.getConfigManager().getCustomRareTreatItem("fruitkey");
+        if (key != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), key);
+            player.sendMessage("§e🗝️ You received a Fruitsters Key!");
         } else {
-            player.sendMessage("§c⚠ Fruit Key reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Fruitsters Key reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applySpookKey(Player player) {
-        ItemStack spookey = plugin.getConfigManager().getCustomRareTreatItem("spookey");
-        if (spookey != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), spookey);
-            player.sendMessage("§5🗝️ You received a Spook Key!");
+    private void applySpooKey(Player player) {
+        ItemStack key = plugin.getConfigManager().getCustomRareTreatItem("spookey");
+        if (key != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), key);
+            player.sendMessage("§5🎃 You received a SpooKey!");
         } else {
-            player.sendMessage("§c⚠ Spook Key reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ SpooKey reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyNetherite(Player player) {
-        ItemStack netherite = plugin.getConfigManager().getCustomRareTreatItem("netherite");
-        if (netherite != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), netherite);
-            player.sendMessage("§8💎 You received Netherite!");
+    private void applyBlockOfNetherite(Player player) {
+        ItemStack netherite = new ItemStack(Material.NETHERITE_BLOCK);
+        player.getWorld().dropItemNaturally(player.getLocation(), netherite);
+        player.sendMessage("§8💎 You received a Block of Netherite!");
+    }
+    
+    private void applyWitchSpawner(Player player) {
+        ItemStack spawner = plugin.getConfigManager().getCustomRareTreatItem("wspawn");
+        if (spawner != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), spawner);
+            player.sendMessage("§5🧙 You received a Witch Spawner!");
         } else {
-            player.sendMessage("§c⚠ Netherite reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Witch Spawner reward is not configured! Please contact an administrator.");
         }
     }
     
-    private void applyWitherSpawn(Player player) {
-        ItemStack wspawn = plugin.getConfigManager().getCustomRareTreatItem("wspawn");
-        if (wspawn != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), wspawn);
-            player.sendMessage("§0💀 You received a Wither Spawn!");
+    private void applySpiderSpawner(Player player) {
+        ItemStack spawner = plugin.getConfigManager().getCustomRareTreatItem("sspawn");
+        if (spawner != null) {
+            player.getWorld().dropItemNaturally(player.getLocation(), spawner);
+            player.sendMessage("§8🕷️ You received a Spider Spawner!");
         } else {
-            player.sendMessage("§c⚠ Wither Spawn reward is not configured! Please contact an administrator.");
-        }
-    }
-    
-    private void applySkeletonSpawn(Player player) {
-        ItemStack sspawn = plugin.getConfigManager().getCustomRareTreatItem("sspawn");
-        if (sspawn != null) {
-            player.getWorld().dropItemNaturally(player.getLocation(), sspawn);
-            player.sendMessage("§f💀 You received a Skeleton Spawn!");
-        } else {
-            player.sendMessage("§c⚠ Skeleton Spawn reward is not configured! Please contact an administrator.");
+            player.sendMessage("§c⚠ Spider Spawner reward is not configured! Please contact an administrator.");
         }
     }
 }
